@@ -14,4 +14,11 @@ class TeamControllerTest extends TestCase
         $this->assertEquals('team name', $teamController->name());
         $this->assertEquals(['member 1', 'member 2'], $teamController->members());
     }
+
+    public function test_example()
+    {
+        $team = TeamController::start('My Team', ['John', 'Mary']);
+
+        $this->assertEquals('My Team', $team->name());
+    }
 }
