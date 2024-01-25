@@ -19,11 +19,11 @@ interface CurrencyInterface
 
 class CurrencyController extends Controller
 {
+
     /**
-     * Convert the currency using the specified service.
-     *
      * @param CurrencyInterface $currency
      * @return array
+     * @throws \Exception
      */
     public function convert(CurrencyInterface $currency)
     {
@@ -50,7 +50,7 @@ class CurrencyController extends Controller
     }
 }
 
-class Api
+class ExternalAPIService
 {
     protected string $baseUrl;
     protected string $apiKey;
@@ -88,21 +88,21 @@ class Api
 
 class AmdorenService implements CurrencyInterface
 {
+
     /**
-     * Convert the currency using Amdoren service.
-     *
      * @param $amount
      * @param $from
      * @param $to
      * @return array|mixed
+     * @throws \Exception
      */
     public function convert($amount, $from, $to)
     {
         $url = config('services.amdoren.base_url');
         $apiKey = config('services.amdoren.api_key');
 
-        $apiSimulator = new Api($url, $apiKey);
-        $response = $apiSimulator->apiClient($amount, $from, $to);
+        $apiService = new ExternalAPIService($url, $apiKey);
+        $response = $apiService->apiClient($amount, $from, $to);
 
         return $response->json();
     }
@@ -110,21 +110,21 @@ class AmdorenService implements CurrencyInterface
 
 class FixerService implements CurrencyInterface
 {
+
     /**
-     * Convert the currency using Fixer service.
-     *
      * @param $amount
      * @param $from
      * @param $to
      * @return array|mixed
+     * @throws \Exception
      */
     public function convert($amount, $from, $to)
     {
         $url = config('services.fixer.base_url');
         $apiKey = config('services.fixer.api_key');
 
-        $apiSimulator = new Api($url, $apiKey);
-        $response = $apiSimulator->apiClient($amount, $from, $to);
+        $apiService = new ExternalAPIService($url, $apiKey);
+        $response = $apiService->apiClient($amount, $from, $to);
 
         return $response->json();
     }
