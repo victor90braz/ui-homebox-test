@@ -37,11 +37,16 @@ class AmdorenService implements CurrencyInterface
 {
     public function convert($amount, $from, $to)
     {
-        $response = $this->fakeApiRequest($amount, $from, $to);
+        $response = (new FakeApi())->getQueryParameters($amount, $from, $to);
 
         return $response->json();
     }
-    public function fakeApiRequest($amount, $from, $to)
+
+}
+
+class FakeApi
+{
+    public function getQueryParameters($amount, $from, $to)
     {
         // http://127.0.0.1:8000/currency/api/store?amount=23.34&from=EUR&to=USD
 
@@ -61,7 +66,6 @@ class AmdorenService implements CurrencyInterface
 
         return Http::get('https://www.amdoren.com/api/currency.php');
     }
-
 }
 
 $currencyController = new CurrencyController();
