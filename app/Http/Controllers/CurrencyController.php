@@ -84,12 +84,14 @@ class FakeApi
             ]),
         ]);
 
-        return Http::get($this->base_url, [
+        Http::get($this->base_url, [
             'api_key' =>  $this->api_key,
             'amount' => $amount,
             'from' => $from,
             'to' => $to,
         ]);
+
+        return Http::get($this->base_url);
     }
 }
 
@@ -97,4 +99,4 @@ $currency = new CurrencyController();
 
 $amdoren = $currency->store(new AmdorenService());
 
-var_dump($amdoren);
+dd($amdoren);
