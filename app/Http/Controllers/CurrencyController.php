@@ -27,9 +27,15 @@ class CurrencyController extends Controller
      */
     public function convert(CurrencyInterface $currency)
     {
-        $amount = request('amount');
-        $from = request('from');
-        $to = request('to');
+        $validateData = request()->validate([
+            'amount' => ['required', 'numeric', 'min:0.1'],
+            'from' => ['required', 'string', 'size:3'],
+            'to' => ['required', 'string', 'size:3'],
+        ]);
+
+        $amount = $validateData['amount'];
+        $from = $validateData['from'];
+        $to = $validateData['to'];
 
         $response = $currency->convert($amount, $from, $to);
 
