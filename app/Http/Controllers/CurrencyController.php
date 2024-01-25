@@ -88,7 +88,6 @@ class FakeApi
         ]);
 
         Http::get($this->base_url, [
-            'api_key' =>  $this->api_key,
             'amount' => $amount,
             'from' => $from,
             'to' => $to,
