@@ -1,7 +1,5 @@
 <?php
 
-// http://127.0.0.1:8000/currency/api/store?amount=23.34&from=EUR&to=USD
-
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Http;
@@ -9,6 +7,8 @@ use Illuminate\Support\Facades\Http;
 interface CurrencyInterface
 {
     /**
+     * Convert the given amount from one currency to another.
+     *
      * @param float $amount
      * @param string $from
      * @param string $to
@@ -20,10 +20,12 @@ interface CurrencyInterface
 class CurrencyController extends Controller
 {
     /**
+     * Convert the currency using the specified service.
+     *
      * @param CurrencyInterface $currency
      * @return array
      */
-    public function store(CurrencyInterface $currency)
+    public function convert(CurrencyInterface $currency)
     {
         $amount = request('amount');
         $from = request('from');
@@ -38,48 +40,51 @@ class CurrencyController extends Controller
     }
 }
 
-class FakeApi
+class ApiSimulator
 {
-    protected string $base_url;
-    protected string $api_key;
+    protected string $baseUrl;
+    protected string $apiKey;
 
-    public function __construct($base_url, $api_key)
+    public function __construct($baseUrl, $apiKey)
     {
-        $this->base_url = $base_url;
-        $this->api_key = $api_key;
+        $this->baseUrl = $baseUrl;
+        $this->apiKey = $apiKey;
     }
 
     /**
+     * Simulate making a request to the API.
+     *
      * @param $amount
      * @param $from
      * @param $to
      * @return \Illuminate\Http\Client\Response
      */
-    public function getQueryParameters($amount, $from, $to)
+    public function simulateRequest($amount, $from, $to)
     {
-
         Http::fake([
-            $this->base_url => Http::response([
+            $this->baseUrl => Http::response([
                 'amount' => $amount,
                 'from' => $from,
                 'to' => $to,
             ]),
         ]);
 
-        Http::get($this->base_url, [
-            'api_key' =>  $this->api_key,
+        Http::get($this->baseUrl, [
+            'api_key' =>  $this->apiKey,
             'amount' => $amount,
             'from' => $from,
             'to' => $to,
         ]);
 
-        return Http::get($this->base_url);
+        return Http::get($this->baseUrl);
     }
 }
 
 class AmdorenService implements CurrencyInterface
 {
     /**
+     * Convert the currency using Amdoren service.
+     *
      * @param $amount
      * @param $from
      * @param $to
@@ -88,10 +93,10 @@ class AmdorenService implements CurrencyInterface
     public function convert($amount, $from, $to)
     {
         $url = config('services.amdoren.base_url');
-        $api_key = config('services.amdoren.api_key');
+        $apiKey = config('services.amdoren.api_key');
 
-        $amdorenApi = new FakeApi($url, $api_key);
-        $response = $amdorenApi->getQueryParameters($amount, $from, $to);
+        $apiSimulator = new ApiSimulator($url, $apiKey);
+        $response = $apiSimulator->simulateRequest($amount, $from, $to);
 
         return $response->json();
     }
@@ -100,6 +105,8 @@ class AmdorenService implements CurrencyInterface
 class FixerService implements CurrencyInterface
 {
     /**
+     * Convert the currency using Fixer service.
+     *
      * @param $amount
      * @param $from
      * @param $to
@@ -108,11 +115,10 @@ class FixerService implements CurrencyInterface
     public function convert($amount, $from, $to)
     {
         $url = config('services.fixer.base_url');
-        $api_key = config('services.fixer.api_key');
+        $apiKey = config('services.fixer.api_key');
 
-        $fixerApi = new FakeApi($url, $api_key);
-
-        $response = $fixerApi->getQueryParameters($amount, $from, $to);
+        $apiSimulator = new ApiSimulator($url, $apiKey);
+        $response = $apiSimulator->simulateRequest($amount, $from, $to);
 
         return $response->json();
     }
@@ -120,8 +126,8 @@ class FixerService implements CurrencyInterface
 
 $currency = new CurrencyController();
 
-$amdoren = $currency->store(new AmdorenService());
-$fixer = $currency->store(new FixerService());
+$amdoren = $currency->convert(new AmdorenService());
+$fixer = $currency->convert(new FixerService());
 
-//dd($amdoren);
-dd($fixer);
+dd($amdoren);
+//dd($fixer);
