@@ -29,7 +29,6 @@ class CurrencyController extends Controller
             'converted' => $response['amount'],
             'currency' => $response['to'],
         ];
-
     }
 }
 
@@ -38,14 +37,13 @@ class AmdorenService implements CurrencyInterface
     public function convert($amount, $from, $to)
     {
         $url = config('services.amdoren.base_url');
-        $api_key = config('services.amdoren.base_url');
+        $api_key = config('services.amdoren.api_key');
 
-        $amdorenApi = new FakeApi($url,$api_key);
+        $amdorenApi = new FakeApi($url, $api_key);
         $response = $amdorenApi->getQueryParameters($amount, $from, $to);
 
         return $response->json();
     }
-
 }
 
 class FixerService implements CurrencyInterface
@@ -53,15 +51,14 @@ class FixerService implements CurrencyInterface
     public function convert($amount, $from, $to)
     {
         $url = config('services.fixer.base_url');
-        $api_key = config('services.fixer.base_url');
+        $api_key = config('services.fixer.api_key');
 
-        $fixerApi = new FakeApi($url,$api_key);
+        $fixerApi = new FakeApi($url, $api_key);
 
         $response = $fixerApi->getQueryParameters($amount, $from, $to);
 
         return $response->json();
     }
-
 }
 
 class FakeApi
@@ -69,9 +66,9 @@ class FakeApi
     protected string $base_url;
     protected string $api_key;
 
-    public function __construct($base_ulr, $api_key)
+    public function __construct($base_url, $api_key)
     {
-        $this->base_url = $base_ulr;
+        $this->base_url = $base_url;
         $this->api_key = $api_key;
     }
 
@@ -87,14 +84,12 @@ class FakeApi
             ]),
         ]);
 
-        Http::get($this->base_url, [
+        return Http::get($this->base_url, [
             'api_key' =>  $this->api_key,
             'amount' => $amount,
             'from' => $from,
             'to' => $to,
         ]);
-
-        return Http::get($this->base_url);
     }
 }
 
