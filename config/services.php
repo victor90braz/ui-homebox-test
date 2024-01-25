@@ -31,4 +31,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'amdoren' => [
+        'base_url' => env('AMDOREN_BASE_URL'),
+        'api_key' => env('amdoren_base_api'),
+    ],
+
+    'fixer' => [
+        'base_url' => env('AMDOREN_BASE_URL'),
+        'api_key' => env('amdoren_base_api'),
+    ]
 ];
