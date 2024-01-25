@@ -39,14 +39,18 @@ class CurrencyController extends Controller
 
         $response = $currency->convert($amount, $from, $to);
 
+        if (isset($response['error_message']) && $response['error_message'] !== '') {
+            throw new \Exception('Error: ' . $response['error_message']);
+        }
+
         return [
             'converted' => $response['amount'],
-            'currency' => $response['to'],
+            'currency' => $to,
         ];
     }
 }
 
-class ApiSimulator
+class Api
 {
     protected string $baseUrl;
     protected string $apiKey;
@@ -58,32 +62,28 @@ class ApiSimulator
     }
 
     /**
-     * Simulate making a request to the API.
-     *
      * @param $amount
      * @param $from
      * @param $to
      * @return \Illuminate\Http\Client\Response
+     * @throws \Exception
      */
-    public function simulateRequest($amount, $from, $to)
+    public function apiClient($amount, $from, $to)
     {
-        Http::fake([
-            $this->baseUrl => Http::response([
+        try {
+            return Http::get($this->baseUrl, [
+                'api_key' => $this->apiKey,
                 'amount' => $amount,
                 'from' => $from,
                 'to' => $to,
-            ]),
-        ]);
+            ]);
 
-        Http::get($this->baseUrl, [
-            'api_key' =>  $this->apiKey,
-            'amount' => $amount,
-            'from' => $from,
-            'to' => $to,
-        ]);
-
-        return Http::get($this->baseUrl);
+        } catch (\Exception $e) {
+            report($e);
+            throw new \Exception('Error during API request: ' . $e->getMessage());
+        }
     }
+
 }
 
 class AmdorenService implements CurrencyInterface
@@ -101,8 +101,8 @@ class AmdorenService implements CurrencyInterface
         $url = config('services.amdoren.base_url');
         $apiKey = config('services.amdoren.api_key');
 
-        $apiSimulator = new ApiSimulator($url, $apiKey);
-        $response = $apiSimulator->simulateRequest($amount, $from, $to);
+        $apiSimulator = new Api($url, $apiKey);
+        $response = $apiSimulator->apiClient($amount, $from, $to);
 
         return $response->json();
     }
@@ -123,17 +123,11 @@ class FixerService implements CurrencyInterface
         $url = config('services.fixer.base_url');
         $apiKey = config('services.fixer.api_key');
 
-        $apiSimulator = new ApiSimulator($url, $apiKey);
-        $response = $apiSimulator->simulateRequest($amount, $from, $to);
+        $apiSimulator = new Api($url, $apiKey);
+        $response = $apiSimulator->apiClient($amount, $from, $to);
 
         return $response->json();
     }
 }
 
-$currency = new CurrencyController();
 
-$amdoren = $currency->convert(new AmdorenService());
-$fixer = $currency->convert(new FixerService());
-
-dd($amdoren);
-//dd($fixer);

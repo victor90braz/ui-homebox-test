@@ -17,4 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/currency/api/store', [\App\Http\Controllers\CurrencyController::class, 'store']);
+use Illuminate\Routing\Middleware\SubstituteBindings;
+
+Route::get('/currency/api/convert', [\App\Http\Controllers\CurrencyController::class, 'convert'])
+    ->withoutMiddleware(SubstituteBindings::class);
