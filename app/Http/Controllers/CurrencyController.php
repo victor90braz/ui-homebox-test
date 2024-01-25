@@ -72,7 +72,7 @@ class FakeApi
     public function __construct($base_ulr, $api_key)
     {
         $this->base_url = $base_ulr;
-        $this->$api_key = $api_key;
+        $this->api_key = $api_key;
     }
 
     public function getQueryParameters($amount, $from, $to)
@@ -88,6 +88,7 @@ class FakeApi
         ]);
 
         Http::get($this->base_url, [
+            'api_key' =>  $this->api_key,
             'amount' => $amount,
             'from' => $from,
             'to' => $to,
@@ -97,3 +98,8 @@ class FakeApi
     }
 }
 
+$currency = new CurrencyController();
+
+$amdoren = $currency->store(new AmdorenService());
+
+var_dump($amdoren);
