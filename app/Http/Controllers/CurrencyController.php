@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AmdorenService;
+
 interface CurrencyInterface
 {
     /**
@@ -12,7 +14,7 @@ interface CurrencyInterface
      * @param string $to
      * @return mixed
      */
-    public function convert(float $amount, string $from, string $to);
+    public function convert(string $from, string $to, float $amount, );
 }
 
 class CurrencyController extends Controller
@@ -26,22 +28,26 @@ class CurrencyController extends Controller
     public function convert(CurrencyInterface $currency)
     {
         $validateData = request()->validate([
-            'amount' => ['required', 'numeric', ],
             'from' => ['required', 'string', 'size:3'],
             'to' => ['required', 'string', 'size:3'],
+            'amount' => ['required', 'numeric', ],
         ]);
 
-        $amount = $validateData['amount'];
         $from = $validateData['from'];
         $to = $validateData['to'];
+        $amount = $validateData['amount'];
 
-        $response = $currency->convert($amount, $from, $to);
+        $response = $currency->convert( $from, $to, $amount);
+
+       dd($response);
 
         return [
             'converted' => $response['amount'],
         ];
     }
 }
+
+
 
 
 

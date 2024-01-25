@@ -44,21 +44,23 @@ class ExternalAPIService
      * @param $amount
      * @return \Illuminate\Http\Client\Response
      */
-    public function fakeApiRequest($from,$to,$amount)
+    public function fakeApiRequest($amount, $from, $to)
     {
         Http::fake([
-            Http::response([
+            $this->baseUrl => Http::response([
                 'from' => $from,
                 'to' => $to,
                 'amount' => $amount,
             ]),
         ]);
 
+
         Http::get($this->baseUrl, [
             'from' => $from,
             'to' => $to,
             'amount' => $amount,
         ]);
+        //dd( $this->apiKey);
 
         return Http::get($this->baseUrl);
     }
