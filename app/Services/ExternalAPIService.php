@@ -22,7 +22,7 @@ class ExternalAPIService
      * @return \Illuminate\Http\Client\Response
      * @throws \Exception
      */
-    public function apiClient($amount, $from, $to): \Illuminate\Http\Client\Response
+    public function apiClient(string $from, string $to, float $amount): \Illuminate\Http\Client\Response
     {
         try {
             return Http::get($this->baseUrl, [
@@ -44,7 +44,7 @@ class ExternalAPIService
      * @param $amount
      * @return \Illuminate\Http\Client\Response
      */
-    public function fakeApiRequest($amount, $from, $to)
+    public function fakeApiRequest(string $from, string $to, float $amount)
     {
         Http::fake([
             $this->baseUrl => Http::response([
@@ -54,13 +54,11 @@ class ExternalAPIService
             ]),
         ]);
 
-
         Http::get($this->baseUrl, [
             'from' => $from,
             'to' => $to,
             'amount' => $amount,
         ]);
-        //dd( $this->apiKey);
 
         return Http::get($this->baseUrl);
     }

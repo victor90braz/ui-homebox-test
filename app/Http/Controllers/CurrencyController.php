@@ -1,29 +1,21 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Services\AmdorenService;
-
 interface CurrencyInterface
 {
     /**
-     * Convert the given amount from one currency to another.
-     *
-     * @param float $amount
      * @param string $from
      * @param string $to
+     * @param float $amount
      * @return mixed
      */
-    public function convert(string $from, string $to, float $amount, );
+    public function convert(string $from, string $to, float $amount);
 }
-
 class CurrencyController extends Controller
 {
-
     /**
      * @param CurrencyInterface $currency
      * @return array
-     * @throws \Exception
      */
     public function convert(CurrencyInterface $currency)
     {
@@ -37,12 +29,11 @@ class CurrencyController extends Controller
         $to = $validateData['to'];
         $amount = $validateData['amount'];
 
-        $response = $currency->convert( $from, $to, $amount);
-
-       dd($response);
+        $response = $currency->convert($from, $to, $amount);
 
         return [
             'converted' => $response['amount'],
+            'currency' => $response['to'],
         ];
     }
 }

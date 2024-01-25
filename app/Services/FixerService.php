@@ -7,13 +7,12 @@ use App\Http\Controllers\CurrencyInterface;
 class FixerService implements CurrencyInterface
 {
     /**
-     * @param $amount
-     * @param $from
-     * @param $to
-     * @return array|mixed
-     * @throws \Exception
+     * @param string $from
+     * @param string $to
+     * @param float $amount
+     * @return mixed
      */
-    public function convert( $from, $to, $amount,): mixed
+    public function convert(string $from, string $to, float $amount): mixed
     {
         $url = config('services.fixer.base_url');
         $apiKey = config('services.fixer.api_key');
