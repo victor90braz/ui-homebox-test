@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(CurrencyInterface::class, AmdorenService::class);
+        //$this->app->bind(CurrencyInterface::class, AmdorenService::class);
         //$this->app->bind(CurrencyInterface::class, FixerService::class);
     }
 
