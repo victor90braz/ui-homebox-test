@@ -1,5 +1,7 @@
 <?php
 
+// http://127.0.0.1:8000/currency/api/store?amount=23.34&from=EUR&to=USD
+
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Http;
@@ -17,6 +19,10 @@ interface CurrencyInterface
 
 class CurrencyController extends Controller
 {
+    /**
+     * @param CurrencyInterface $currency
+     * @return array
+     */
     public function store(CurrencyInterface $currency)
     {
         $amount = request('amount');
@@ -32,35 +38,6 @@ class CurrencyController extends Controller
     }
 }
 
-class AmdorenService implements CurrencyInterface
-{
-    public function convert($amount, $from, $to)
-    {
-        $url = config('services.amdoren.base_url');
-        $api_key = config('services.amdoren.api_key');
-
-        $amdorenApi = new FakeApi($url, $api_key);
-        $response = $amdorenApi->getQueryParameters($amount, $from, $to);
-
-        return $response->json();
-    }
-}
-
-class FixerService implements CurrencyInterface
-{
-    public function convert($amount, $from, $to)
-    {
-        $url = config('services.fixer.base_url');
-        $api_key = config('services.fixer.api_key');
-
-        $fixerApi = new FakeApi($url, $api_key);
-
-        $response = $fixerApi->getQueryParameters($amount, $from, $to);
-
-        return $response->json();
-    }
-}
-
 class FakeApi
 {
     protected string $base_url;
@@ -72,9 +49,14 @@ class FakeApi
         $this->api_key = $api_key;
     }
 
+    /**
+     * @param $amount
+     * @param $from
+     * @param $to
+     * @return \Illuminate\Http\Client\Response
+     */
     public function getQueryParameters($amount, $from, $to)
     {
-        // http://127.0.0.1:8000/currency/api/store?amount=23.34&from=EUR&to=USD
 
         Http::fake([
             $this->base_url => Http::response([
@@ -95,8 +77,51 @@ class FakeApi
     }
 }
 
+class AmdorenService implements CurrencyInterface
+{
+    /**
+     * @param $amount
+     * @param $from
+     * @param $to
+     * @return array|mixed
+     */
+    public function convert($amount, $from, $to)
+    {
+        $url = config('services.amdoren.base_url');
+        $api_key = config('services.amdoren.api_key');
+
+        $amdorenApi = new FakeApi($url, $api_key);
+        $response = $amdorenApi->getQueryParameters($amount, $from, $to);
+
+        return $response->json();
+    }
+}
+
+class FixerService implements CurrencyInterface
+{
+    /**
+     * @param $amount
+     * @param $from
+     * @param $to
+     * @return array|mixed
+     */
+    public function convert($amount, $from, $to)
+    {
+        $url = config('services.fixer.base_url');
+        $api_key = config('services.fixer.api_key');
+
+        $fixerApi = new FakeApi($url, $api_key);
+
+        $response = $fixerApi->getQueryParameters($amount, $from, $to);
+
+        return $response->json();
+    }
+}
+
 $currency = new CurrencyController();
 
 $amdoren = $currency->store(new AmdorenService());
+$fixer = $currency->store(new FixerService());
 
-dd($amdoren);
+//dd($amdoren);
+dd($fixer);
