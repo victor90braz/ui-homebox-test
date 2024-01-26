@@ -13,8 +13,8 @@ class CurrencyController extends Controller
     public function store(CurrencyInterface $currency)
     {
         $validateData = request()->validate([
-            'from' => ['sometimes', 'required', 'string'],
-            'to' => ['required', 'string'],
+            'from' => ['sometimes', 'string', 'size:3'],
+            'to' => ['required', 'string', 'size:3'],
             'amount' => ['required', 'numeric'],
         ]);
 
