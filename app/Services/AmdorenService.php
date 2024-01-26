@@ -7,12 +7,9 @@ use App\Http\Controllers\CurrencyInterface;
 class AmdorenService implements CurrencyInterface
 {
     /**
-     * @param $from
-     * @param $to
-     * @param $amount
-     * @return mixed
+     * @inheritDoc
      */
-    public function convert(string $from, string $to, float $amount): mixed
+    public function convert(object $service, string $from, string $to, float $amount): array
     {
         $url = config('services.amdoren.base_url');
         $apiKey = config('services.amdoren.api_key');
