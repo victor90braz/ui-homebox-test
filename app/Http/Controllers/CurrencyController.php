@@ -1,10 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
-
 class CurrencyController extends Controller
 {
     const QUERY_PARAMETER_AS_DEFAULT = 'GBP';
