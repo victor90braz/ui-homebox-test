@@ -7,11 +7,11 @@ use App\Services\AmdorenService;
 class AmdorenController extends Controller
 {
     /**
+     * @param CurrencyController $currencyController
      * @return array
      */
-    public function convert()
+    public function convert(CurrencyController $currencyController)
     {
-        $currencyController = app(CurrencyController::class);
         return $currencyController->store(new AmdorenService());
     }
 }
