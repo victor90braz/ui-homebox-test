@@ -14,6 +14,8 @@ interface CurrencyInterface
 }
 class CurrencyController extends Controller
 {
+    const QUERY_PARAMETER_AS_DEFAULT = 'GBP';
+
     /**
      * @param CurrencyInterface $currency
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -21,10 +23,12 @@ class CurrencyController extends Controller
     public function store(CurrencyInterface $currency)
     {
         $validateData = request()->validate([
-            'from' => ['required', 'string'],
+            'from' => ['sometimes', 'required', 'string'],
             'to' => ['required', 'string'],
             'amount' => ['required', 'numeric'],
         ]);
+
+        $validateData['from'] = self::QUERY_PARAMETER_AS_DEFAULT;
 
         $response = $currency->convert($validateData['from'], $validateData['to'], $validateData['amount']);
 
