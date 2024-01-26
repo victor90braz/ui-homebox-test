@@ -9,7 +9,7 @@ class AmdorenService implements CurrencyInterface
     /**
      * @inheritDoc
      */
-    public function convert(object $service, string $from, string $to, float $amount): array
+    public function convert(string $from, string $to, float $amount): array
     {
         $url = config('services.amdoren.base_url');
         $apiKey = config('services.amdoren.api_key');

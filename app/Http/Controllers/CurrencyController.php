@@ -1,19 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Services\AmdorenService;
-use App\Services\FixerService;
 
 interface CurrencyInterface
 {
     /**
-     * @param object $service
      * @param string $from
      * @param string $to
      * @param float $amount
      * @return array
      */
-    public function convert(object $service, string $from, string $to, float $amount): array;
+    public function convert(string $from, string $to, float $amount): array;
 }
 
 class CurrencyController extends Controller
@@ -22,13 +19,18 @@ class CurrencyController extends Controller
      * @param CurrencyInterface $currency
      * @return array
      */
-    public function convert(CurrencyInterface $currency, string $from, string $to, float $amount)
+    public function store(CurrencyInterface $currency)
     {
-        // Call the convert method on the provided currency service
-        $response = $currency->convert(new AmdorenService(), $from, $to, $amount);
+        $validateData = \request()->validate([
+            'from' => ['required', 'string'],
+            'to' => ['required', 'string'],
+            'amount' => ['required', 'numeric'],
+        ]);
+
+        $response = $currency->convert($validateData['from'], $validateData['to'], $validateData['amount']);
 
         return [
-            'converted' => $response['amount'],
+            'converted2' => $response['amount'],
             'currency' => $response['to'],
         ];
     }
