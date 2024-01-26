@@ -6,7 +6,6 @@ use App\Http\Controllers\CurrencyInterface;
 
 class AmdorenService implements CurrencyInterface
 {
-
     /**
      * @param string $from
      * @param string $to

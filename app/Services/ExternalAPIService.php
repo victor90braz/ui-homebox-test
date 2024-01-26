@@ -20,29 +20,6 @@ class ExternalAPIService
      * @param string $to
      * @param float $amount
      * @return \Illuminate\Http\Client\Response
-     * @throws \Exception
-     */
-    public function apiClient(string $from, string $to, float $amount): \Illuminate\Http\Client\Response
-    {
-        try {
-            return Http::get($this->baseUrl, [
-                'api_key' => $this->apiKey,
-                'amount' => $amount,
-                'from' => $from,
-                'to' => $to,
-            ]);
-
-        } catch (\Exception $e) {
-            report($e);
-            throw new \Exception('Error during API request: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * @param string $from
-     * @param string $to
-     * @param float $amount
-     * @return \Illuminate\Http\Client\Response
      */
     public function fakeApiRequest(string $from, string $to, float $amount)
     {
@@ -61,6 +38,29 @@ class ExternalAPIService
         ]);
 
         return Http::get($this->baseUrl);
+    }
+
+    /**
+     * @param string $from
+     * @param string $to
+     * @param float $amount
+     * @return \Illuminate\Http\Client\Response
+     * @throws \Exception
+     */
+    public function apiClient(string $from, string $to, float $amount): \Illuminate\Http\Client\Response
+    {
+        try {
+            return Http::get($this->baseUrl, [
+                'api_key' => $this->apiKey,
+                'amount' => $amount,
+                'from' => $from,
+                'to' => $to,
+            ]);
+
+        } catch (\Exception $error) {
+            report($error);
+            throw new \Exception('Error during API request: ' . $error->getMessage());
+        }
     }
 
 }
