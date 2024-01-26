@@ -30,7 +30,7 @@ class CurrencyController extends Controller
         $response = $currency->convert($validateData['from'], $validateData['to'], $validateData['amount']);
 
         return [
-            'converted2' => $response['amount'],
+            'converted' => $response['amount'],
             'currency' => $response['to'],
         ];
     }

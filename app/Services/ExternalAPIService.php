@@ -16,9 +16,9 @@ class ExternalAPIService
     }
 
     /**
-     * @param $amount
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
+     * @param float $amount
      * @return \Illuminate\Http\Client\Response
      * @throws \Exception
      */
@@ -39,9 +39,9 @@ class ExternalAPIService
     }
 
     /**
-     * @param $from
-     * @param $to
-     * @param $amount
+     * @param string $from
+     * @param string $to
+     * @param float $amount
      * @return \Illuminate\Http\Client\Response
      */
     public function fakeApiRequest(string $from, string $to, float $amount)

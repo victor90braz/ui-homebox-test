@@ -1,13 +1,13 @@
 <?php
 
+use App\Http\Controllers\AmdorenController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/currency/api/convert', [\App\Http\Controllers\CurrencyController::class, 'convert']);
-Route::get('/currency/api/convert-amdoren', [\App\Http\Controllers\AmdorenController::class, 'convert']);
+Route::get('/currency/api/convert-amdoren', [AmdorenController::class, 'convert'])->name('currency.convert.amdoren');
 
 
 

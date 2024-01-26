@@ -6,8 +6,12 @@ use App\Http\Controllers\CurrencyInterface;
 
 class AmdorenService implements CurrencyInterface
 {
+
     /**
-     * @inheritDoc
+     * @param string $from
+     * @param string $to
+     * @param float $amount
+     * @return array
      */
     public function convert(string $from, string $to, float $amount): array
     {
