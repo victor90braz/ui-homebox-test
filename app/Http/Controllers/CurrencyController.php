@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 class CurrencyController extends Controller
 {
-    const QUERY_PARAMETER_AS_DEFAULT = 'GBP';
+    const DEFAULT_QUERY_PARAMETER = 'GBP';
 
     /**
      * @param CurrencyInterface $currency
@@ -17,7 +17,7 @@ class CurrencyController extends Controller
             'amount' => ['required', 'numeric'],
         ]);
 
-        $validateData['from'] = self::QUERY_PARAMETER_AS_DEFAULT;
+        $validateData['from'] = self::DEFAULT_QUERY_PARAMETER;
 
         $response = $currency->convert($validateData['from'], $validateData['to'], $validateData['amount']);
 
