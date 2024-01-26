@@ -12,4 +12,3 @@ Route::get('/currency/api/convert-amdoren', [AmdorenController::class, 'convert'
 Route::get('/currency/api/convert-fixer', [FixerController::class, 'convert'])->name('currency.convert.fixer');
 
 
-
