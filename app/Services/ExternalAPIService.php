@@ -49,6 +49,7 @@ class ExternalAPIService
      */
     public function apiClient(string $from, string $to, float $amount): \Illuminate\Http\Client\Response
     {
+
         try {
             return Http::get($this->baseUrl, [
                 'api_key' => $this->apiKey,

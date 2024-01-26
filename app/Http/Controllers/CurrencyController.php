@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use mysql_xdevapi\Exception;
+
 class CurrencyController extends Controller
 {
     const QUERY_PARAMETER_AS_DEFAULT = 'GBP';
@@ -22,14 +25,16 @@ class CurrencyController extends Controller
 
         $response = $currency->convert($validateData['from'], $validateData['to'], $validateData['amount']);
 
-        if (array_key_exists('to', $response) && array_key_exists('amount', $response)) {
-            return [
-                'converted' => $response['amount'],
-                'currency' => $response['to'],
-            ];
-        } else {
-            return redirect("/")->withErrors(['error' => 'Conversion failed. Please check your input and try again.']);
+        if (array_key_exists('error', $response)) {
+            report($response['error_message']);
+            return redirect('/')->withErrors('Something went wrong! We will back soon.');
         }
+
+        return [
+            'converted' => $response['amount'],
+            'currency' => $response['to'],
+        ];
+
     }
 }
 

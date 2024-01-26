@@ -18,7 +18,7 @@ class AmdorenService implements CurrencyInterface
         $apiKey = config('services.amdoren.api_key');
 
         $apiService = new ExternalAPIService($url, $apiKey);
-        $response = $apiService->fakeApiRequest($from, $to, $amount);
+        $response = $apiService->apiClient($from, $to, $amount);
 
         return $response->json();
     }
